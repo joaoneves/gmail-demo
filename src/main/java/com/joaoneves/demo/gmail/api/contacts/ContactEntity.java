@@ -1,9 +1,10 @@
 package com.joaoneves.demo.gmail.api.contacts;
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -19,8 +20,13 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ContactEntity {
 	
-	@EmbeddedId private ContactEntityId id;
+	@Id
+	private String resourceName;
 	
-	@Column(nullable = false)
+	@Column
 	private String name;
+	
+	@Column
+	@Email
+	private String email;
 }

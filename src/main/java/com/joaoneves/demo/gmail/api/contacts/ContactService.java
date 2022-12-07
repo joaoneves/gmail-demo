@@ -4,10 +4,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import com.google.gson.Gson;
+import com.joaoneves.demo.gmail.api.HttpClient;
+
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class ContactService {
 
 	private final ContactRepository contactRepository;
@@ -17,14 +25,35 @@ public class ContactService {
 		this.contactRepository = contactRepository;
 	}
 	
-	public void createBatch(final String code) {
-		//TODO use code to get all contacts from 
-		//this.createBatch(null);
+	public void createBatch(final String accessToken) {
+		HttpClient client = new HttpClient();
+        try {
+        	String responseClient = client.get(
+        			"https://people.googleapis.com/v1/people/me/connections?personFields=names,emailAddresses",
+        			accessToken
+        	);
+        	Gson gson = new Gson();
+        	ContactGoogleApisResponse contactsResponse = gson.fromJson(responseClient, ContactGoogleApisResponse.class);
+        	this.persistBatch(contactsResponse);
+        } catch (Exception e) {
+        	log.error("error calling createBatch to store contacts", e);
+        }
 	}
 	
-	private List<ContactEntity> persistBatch(final List<ContactDTO> dtos) {
-		Assert.notEmpty(dtos, "It is not possible to persist not informed contacts");
-		List<ContactEntity> entitiesToPersist = dtos.stream().map(ContactDTO::from).collect(Collectors.toList());
+	private List<ContactEntity> persistBatch(final ContactGoogleApisResponse response) {
+		Assert.notNull(response, "It is not possible to persist not informed contacts");
+		List<ContactEntity> entitiesToPersist = ContactGoogleApisResponse.from(response);
+		
+		//This deleteAll is just for implementation simplification
+		this.contactRepository.deleteAll();
 		return this.contactRepository.saveAll(entitiesToPersist);
+	}
+	
+	public List<ContactDTO> listAll() {
+		return this.contactRepository.findAll(
+				Sort.by(Order.asc("name"), Order.asc("email")))
+				.stream()
+				.map(ContactDTO::to)
+				.collect(Collectors.toList());
 	}
 }
