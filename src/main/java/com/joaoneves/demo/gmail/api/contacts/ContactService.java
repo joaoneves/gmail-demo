@@ -1,8 +1,11 @@
 package com.joaoneves.demo.gmail.api.contacts;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -44,5 +47,13 @@ public class ContactService {
 		//This deleteAll is just for implementation simplification
 		this.contactRepository.deleteAll();
 		return this.contactRepository.saveAll(entitiesToPersist);
+	}
+	
+	public List<ContactDTO> listAll() {
+		return this.contactRepository.findAll(
+				Sort.by(Order.asc("name"), Order.asc("email")))
+				.stream()
+				.map(ContactDTO::to)
+				.collect(Collectors.toList());
 	}
 }
