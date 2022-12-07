@@ -7,7 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import com.joaoneves.demo.gmail.api.HttpClient;
+
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class ContactService {
 
 	private final ContactRepository contactRepository;
@@ -17,9 +22,26 @@ public class ContactService {
 		this.contactRepository = contactRepository;
 	}
 	
-	public void createBatch(final String code) {
+	public void createBatch(final String accessToken) {
 		//TODO use code to get all contacts from 
 		//this.createBatch(null);
+		
+		HttpClient client = new HttpClient();
+		//Gson gson = new Gson();
+        //String payload = gson.toJson(new OAuthRequest());
+        try {
+        	String responseClient = client.get(
+        			"https://people.googleapis.com/v1/people/me/connections?personFields=names,emailAddresses",
+        			accessToken
+        	);
+        	System.out.println(responseClient);
+        	//OAuthResponse oauthResponse = gson.fromJson(responseClient, OAuthResponse.class);
+        	
+        	//TODO construir response payload do retorno da lista de contatos (nomes e emails), iterando tokens de cada response
+        } catch (Exception e) {
+        	log.error("error calling oauth2 to obtain token", e);
+        }
+        
 	}
 	
 	private List<ContactEntity> persistBatch(final List<ContactDTO> dtos) {
