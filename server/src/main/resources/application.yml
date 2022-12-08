@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: 8083
 
 spring:
     datasource:
@@ -26,4 +26,8 @@ spring:
       locale: pt_BR
     main:
       allow-bean-definition-overriding: true
-        
+    thymeleaf:
+      cache: false
+      enabled: true
+      prefix: classpath:/templates/
+      suffix: .html
