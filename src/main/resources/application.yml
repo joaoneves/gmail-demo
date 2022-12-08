@@ -26,4 +26,11 @@ spring:
       locale: pt_BR
     main:
       allow-bean-definition-overriding: true
-        
+    thymeleaf:
+      cache: false
+      enabled: true
+      prefix: classpath:/templates/
+      suffix: .html
+custom:
+  clientId: ${clientId:123}
+  clientSecret: ${clientSecret:123}
