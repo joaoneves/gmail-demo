@@ -31,3 +31,6 @@ spring:
       enabled: true
       prefix: classpath:/templates/
       suffix: .html
+custom:
+  clientId: ${clientId:123}
+  clientSecret: ${clientSecret:123}

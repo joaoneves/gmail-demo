@@ -1,5 +1,9 @@
 package com.joaoneves.demo.gmail.api;
 
+import java.util.List;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -24,13 +28,11 @@ public class HttpClient {
         return EntityUtils.toString(response.getEntity());
     }
     
-    public String post(String url, String payload) throws Exception {
+    public String post(String url, List<NameValuePair> params) throws Exception {
     	HttpPost httpPost = new HttpPost(url);
-
-        StringEntity entity = new StringEntity(payload);
-        httpPost.setEntity(entity);
-        httpPost.setHeader("Host", "accounts.google.com");
-        httpPost.setHeader("Content-type", "application/x-www-form-urlencoded");
+        httpPost.setEntity(new UrlEncodedFormEntity(params));
+//        httpPost.setHeader("Host", "oauth2.googleapis.com");
+//        httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
 
         CloseableHttpResponse response = httpclient.execute(httpPost);
         validateStatus(response.getStatusLine().getStatusCode());
