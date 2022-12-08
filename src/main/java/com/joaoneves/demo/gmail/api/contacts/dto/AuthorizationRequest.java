@@ -1,4 +1,4 @@
-package com.joaoneves.demo.gmail.api;
+package com.joaoneves.demo.gmail.api.contacts.dto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;

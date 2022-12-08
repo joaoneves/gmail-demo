@@ -1,7 +1,9 @@
-package com.joaoneves.demo.gmail.api.contacts;
+package com.joaoneves.demo.gmail.api.contacts.dto;
 
 import java.io.Serializable;
 import java.util.List;
+
+import com.joaoneves.demo.gmail.api.contacts.ContactEntity;
 
 import lombok.Data;
 

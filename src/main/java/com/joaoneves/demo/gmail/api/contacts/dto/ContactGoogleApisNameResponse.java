@@ -1,4 +1,4 @@
-package com.joaoneves.demo.gmail.api.contacts;
+package com.joaoneves.demo.gmail.api.contacts.dto;
 
 import java.io.Serializable;
 

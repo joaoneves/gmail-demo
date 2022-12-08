@@ -1,9 +1,12 @@
-package com.joaoneves.demo.gmail.api;
+package com.joaoneves.demo.gmail.api.utils;
 
+import java.util.List;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
@@ -24,14 +27,9 @@ public class HttpClient {
         return EntityUtils.toString(response.getEntity());
     }
     
-    public String post(String url, String payload) throws Exception {
+    public String post(String url, List<NameValuePair> params) throws Exception {
     	HttpPost httpPost = new HttpPost(url);
-
-        StringEntity entity = new StringEntity(payload);
-        httpPost.setEntity(entity);
-        httpPost.setHeader("Host", "accounts.google.com");
-        httpPost.setHeader("Content-type", "application/x-www-form-urlencoded");
-
+        httpPost.setEntity(new UrlEncodedFormEntity(params));
         CloseableHttpResponse response = httpclient.execute(httpPost);
         validateStatus(response.getStatusLine().getStatusCode());
         return EntityUtils.toString(response.getEntity());
@@ -42,5 +40,4 @@ public class HttpClient {
             throw new RuntimeException("Request error code: " + statusCode);
         }
     }
-
 }
